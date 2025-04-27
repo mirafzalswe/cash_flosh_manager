@@ -14,6 +14,9 @@ class Status(models.Model):
     
     def __str__(self):
         return self.name
+        
+    def get_related_transactions_count(self):
+        return self.transaction_set.count()
 
 
 class TransactionType(models.Model):
@@ -51,6 +54,12 @@ class Category(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.transaction_type})"
+        
+    def get_related_transactions_count(self):
+        return self.transaction_set.count()
+        
+    def get_related_subcategories_count(self):
+        return self.subcategories.count()
 
 
 class Subcategory(models.Model):
@@ -74,6 +83,9 @@ class Subcategory(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.category})"
+        
+    def get_related_transactions_count(self):
+        return self.transaction_set.count()
 
 
 class Transaction(models.Model):
@@ -81,7 +93,7 @@ class Transaction(models.Model):
     date = models.DateField(default=timezone.now, verbose_name="Дата")
     status = models.ForeignKey(
         Status, 
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         verbose_name="Статус"
     )
     transaction_type = models.ForeignKey(

@@ -16,13 +16,13 @@
                     <p class="mb-0">
                         Вы собираетесь удалить {{ item_type }} "{{ object }}". 
                         {% if item_type == 'статус' %}
-                            Это действие может повлиять на существующие транзакции.
+                            Это действие удалит {{ object.get_related_transactions_count }} связанных транзакций.
                         {% elif item_type == 'тип транзакции' %}
-                            Это действие может повлиять на существующие транзакции и категории.
+                            Это действие удалит {{ object.get_related_transactions_count }} связанных транзакций и {{ object.get_related_categories_count }} категорий.
                         {% elif item_type == 'категорию' %}
-                            Это действие может повлиять на существующие транзакции и подкатегории.
+                            Это действие удалит {{ object.get_related_transactions_count }} связанных транзакций и {{ object.get_related_subcategories_count }} подкатегорий.
                         {% elif item_type == 'подкатегорию' %}
-                            Это действие может повлиять на существующие транзакции.
+                            Это действие удалит {{ object.get_related_transactions_count }} связанных транзакций.
                         {% endif %}
                     </p>
                 </div>

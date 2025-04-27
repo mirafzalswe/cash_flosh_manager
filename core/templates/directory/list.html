@@ -32,7 +32,7 @@
                                     <a href="{% url 'status_edit' status.id %}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Редактировать">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{% url 'status_delete' status.id %}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Удалить">
+                                    <a href="{% url 'status_delete' status.id %}" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Удалить">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -79,6 +79,9 @@
                                     <a href="{% url 'transaction_type_edit' type.id %}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Редактировать">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    <a href="{% url 'transaction_type_delete' type.id %}" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </td>
                             </tr>
                             {% empty %}
@@ -124,6 +127,9 @@
                                 <td class="text-end">
                                     <a href="{% url 'category_edit' category.id %}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Редактировать">
                                         <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'category_delete' category.id %}" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -172,6 +178,9 @@
                                 <td class="text-end">
                                     <a href="{% url 'subcategory_edit' subcategory.id %}" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Редактировать">
                                         <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'subcategory_delete' subcategory.id %}" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Удалить">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
