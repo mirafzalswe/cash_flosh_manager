@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование транзакции - Управление ДДС{% endblock %}
+
+{% block page_title %}Редактирование транзакции{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Редактирование транзакции от {{ object.date|date:"d.m.Y" }}</h5>
+                <span class="badge {% if object.transaction_type.name == 'Пополнение' %}bg-success{% else %}bg-danger{% endif %}">
+                    {{ object.transaction_type }}
+                </span>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.date.id_for_label }}" class="form-label">Дата</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.date.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.status.id_for_label }}" class="form-label">Статус</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.status.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.transaction_type.id_for_label }}" class="form-label">Тип транзакции</label>
+                            {{ form.transaction_type }}
+                            {% if form.transaction_type.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.transaction_type.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.amount.id_for_label }}" class="form-label">Сумма (руб.)</label>
+                            {{ form.amount }}
+                            {% if form.amount.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.amount.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.category.id_for_label }}" class="form-label">Категория</label>
+                            {{ form.category }}
+                            {% if form.category.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.category.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.subcategory.id_for_label }}" class="form-label">Подкатегория</label>
+                            {{ form.subcategory }}
+                            {% if form.subcategory.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ form.subcategory.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.comment.id_for_label }}" class="form-label">Комментарий</label>
+                        {{ form.comment }}
+                        {% if form.comment.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.comment.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="{% url 'transaction_list' %}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-1"></i>Назад к списку
+                            </a>
+                            <a href="{% url 'transaction_delete' object.id %}" class="btn btn-outline-danger">
+                                <i class="fas fa-trash me-1"></i>Удалить
+                            </a>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Сохранить изменения
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Информация</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Создано:</dt>
+                    <dd class="col-sm-7">{{ object.created_at|date:"d.m.Y H:i" }}</dd>
+                    
+                    <dt class="col-sm-5">Обновлено:</dt>
+                    <dd class="col-sm-7">{{ object.updated_at|date:"d.m.Y H:i" }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Подсказка</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-0">
+                    <i class="fas fa-info-circle me-1"></i>Отредактируйте необходимые поля формы.
+                </p>
+                <ul class="small text-muted mt-2 mb-0">
+                    <li>При смене типа транзакции список категорий обновится автоматически</li>
+                    <li>При смене категории список подкатегорий обновится автоматически</li>
+                    <li>Все поля, кроме комментария, обязательны для заполнения</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Функции для динамической загрузки категорий и подкатегорий
+    function loadCategories() {
+        const transactionTypeId = $('#{{ form.transaction_type.id_for_label }}').val();
+        const categorySelect = $('#{{ form.category.id_for_label }}');
+        const subcategorySelect = $('#{{ form.subcategory.id_for_label }}');
+        
+        if (transactionTypeId) {
+            $.getJSON("{% url 'get_categories' %}", {transaction_type: transactionTypeId}, function(data) {
+                categorySelect.empty();
+                categorySelect.append('<option value="">---------</option>');
+                data.forEach(function(item) {
+                    categorySelect.append(`<option value="${item.id}">${item.name}</option>`);
+                });
+                // Восстанавливаем выбранное значение если оно есть
+                if ('{{ form.category.value }}') {
+                    categorySelect.val('{{ form.category.value }}');
+                }
+            });
+        } else {
+            categorySelect.empty();
+            categorySelect.append('<option value="">---------</option>');
+        }
+        
+        if (!transactionTypeId) {
+            subcategorySelect.empty();
+            subcategorySelect.append('<option value="">---------</option>');
+        }
+    }
+    
+    function loadSubcategories() {
+        const categoryId = $('#{{ form.category.id_for_label }}').val();
+        const subcategorySelect = $('#{{ form.subcategory.id_for_label }}');
+        
+        if (categoryId) {
+            $.getJSON("{% url 'get_subcategories' %}", {category: categoryId}, function(data) {
+                subcategorySelect.empty();
+                subcategorySelect.append('<option value="">---------</option>');
+                data.forEach(function(item) {
+                    subcategorySelect.append(`<option value="${item.id}">${item.name}</option>`);
+                });
+                // Восстанавливаем выбранное значение если оно есть
+                if ('{{ form.subcategory.value }}') {
+                    subcategorySelect.val('{{ form.subcategory.value }}');
+                }
+            });
+        } else {
+            subcategorySelect.empty();
+            subcategorySelect.append('<option value="">---------</option>');
+        }
+    }
+    
+    // Привязываем события
+    $('#{{ form.transaction_type.id_for_label }}').change(loadCategories);
+    $('#{{ form.category.id_for_label }}').change(loadSubcategories);
+});
+</script>
+{% endblock %}

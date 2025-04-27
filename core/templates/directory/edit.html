@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {% if object %}
+        Редактирование {{ item_type|lower }}а - Управление ДДС
+    {% else %}
+        Создание {{ item_type|lower }}а - Управление ДДС
+    {% endif %}
+{% endblock %}
+
+{% block page_title %}
+    {% if object %}
+        Редактирование {{ item_type|lower }}а
+    {% else %}
+        Создание {{ item_type|lower }}а
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    {% if object %}
+                        Редактирование {{ item_type|lower }}а "{{ object.name }}"
+                    {% else %}
+                        Новый {{ item_type|lower }}
+                    {% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Название</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if form.transaction_type %}
+                    <div class="mb-3">
+                        <label for="{{ form.transaction_type.id_for_label }}" class="form-label">Тип транзакции</label>
+                        {{ form.transaction_type }}
+                        {% if form.transaction_type.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.transaction_type.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if form.category %}
+                    <div class="mb-3">
+                        <label for="{{ form.category.id_for_label }}" class="form-label">Категория</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="text-danger small mt-1">
+                                {{ form.category.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="{% url 'directory_list' %}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-1"></i>Назад к списку
+                            </a>
+                            {% if object %}
+                            <a href="#" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                <i class="fas fa-trash me-1"></i>Удалить
+                            </a>
+                            {% endif %}
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>
+                            {% if object %}Сохранить изменения{% else %}Создать{% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Подсказка</h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-0">
+                    <i class="fas fa-info-circle me-1"></i>
+                    {% if object %}
+                        Отредактируйте данные {{ item_type|lower }}а.
+                    {% else %}
+                        Заполните данные для создания нового {{ item_type|lower }}а.
+                    {% endif %}
+                </p>
+                <ul class="small text-muted mt-2 mb-0">
+                    <li>Название должно быть уникальным</li>
+                    {% if form.transaction_type %}
+                        <li>Выберите тип транзакции из списка</li>
+                    {% endif %}
+                    {% if form.category %}
+                        <li>Выберите категорию из списка</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if object %}
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы действительно хотите удалить {{ item_type|lower }} "{{ object.name }}"?</p>
+                {% if item_type == 'Статус' %}
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>Удаление статуса повлияет на все связанные транзакции.</p>
+                {% elif item_type == 'Тип транзакции' %}
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>Удаление типа транзакции повлияет на все связанные категории и транзакции.</p>
+                {% elif item_type == 'Категория' %}
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>Удаление категории повлияет на все связанные подкатегории и транзакции.</p>
+                {% elif item_type == 'Подкатегория' %}
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle me-1"></i>Удаление подкатегории повлияет на все связанные транзакции.</p>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <form method="post" action="{% url 'directory_delete' item_type|lower object.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>Удалить
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+{% if form.category %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const transactionTypeSelect = $('#{{ form.transaction_type.id_for_label }}');
+    const categorySelect = $('#{{ form.category.id_for_label }}');
+    
+    function loadCategories() {
+        const transactionTypeId = transactionTypeSelect.val();
+        
+        if (transactionTypeId) {
+            $.getJSON("{% url 'get_categories' %}", {transaction_type: transactionTypeId}, function(data) {
+                categorySelect.empty();
+                categorySelect.append('<option value="">---------</option>');
+                data.forEach(function(item) {
+                    categorySelect.append(`<option value="${item.id}">${item.name}</option>`);
+                });
+                // Восстанавливаем выбранное значение если оно есть
+                if ('{{ form.category.value }}') {
+                    categorySelect.val('{{ form.category.value }}');
+                }
+            });
+        } else {
+            categorySelect.empty();
+            categorySelect.append('<option value="">---------</option>');
+        }
+    }
+    
+    transactionTypeSelect.change(loadCategories);
+});
+</script>
+{% endif %}
+{% endblock %}

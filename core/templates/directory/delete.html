@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление {{ item_type }} - Управление ДДС{% endblock %}
+
+{% block page_title %}Удаление {{ item_type }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <h5 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Внимание!
+                    </h5>
+                    <p class="mb-0">
+                        Вы собираетесь удалить {{ item_type }} "{{ object }}". 
+                        {% if item_type == 'статус' %}
+                            Это действие может повлиять на существующие транзакции.
+                        {% elif item_type == 'тип транзакции' %}
+                            Это действие может повлиять на существующие транзакции и категории.
+                        {% elif item_type == 'категорию' %}
+                            Это действие может повлиять на существующие транзакции и подкатегории.
+                        {% elif item_type == 'подкатегорию' %}
+                            Это действие может повлиять на существующие транзакции.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'directory_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Отмена
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Удалить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

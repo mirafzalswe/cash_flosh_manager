@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Редактирование типа транзакции{% else %}Создание типа транзакции{% endif %} - Управление ДДС{% endblock %}
+
+{% block page_title %}
+    {% if form.instance.pk %}
+        Редактирование типа транзакции
+    {% else %}
+        Создание типа транзакции
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">Название типа транзакции</label>
+                        <input type="text" 
+                               class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                               id="{{ form.name.id_for_label }}" 
+                               name="{{ form.name.html_name }}" 
+                               value="{{ form.name.value|default:'' }}"
+                               required
+                               placeholder="Например: Пополнение, Списание">
+                        {% if form.name.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text text-muted">
+                            Тип транзакции определяет, является ли операция доходом или расходом.
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'directory_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Назад к справочникам
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            {% if form.instance.pk %}
+                                <i class="fas fa-save me-1"></i>Сохранить изменения
+                            {% else %}
+                                <i class="fas fa-plus me-1"></i>Создать тип транзакции
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация Bootstrap tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}
