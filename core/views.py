@@ -28,22 +28,22 @@ class IndexView(TemplateView):
         # Общая сумма пополнений за последние 30 дней
         income_sum = Transaction.objects.filter(
             date__gte=thirty_days_ago,
-            transaction_type__name='Пополнение'
+            transaction_type__is_income=True
         ).aggregate(total=Sum('amount'))['total'] or 0
         
         # Общая сумма списаний за последние 30 дней
         expense_sum = Transaction.objects.filter(
             date__gte=thirty_days_ago,
-            transaction_type__name='Списание'
+            transaction_type__is_income=False
         ).aggregate(total=Sum('amount'))['total'] or 0
         
         # Общий баланс за все время
         total_income = Transaction.objects.filter(
-            transaction_type__name='Пополнение'
+            transaction_type__is_income=True
         ).aggregate(total=Sum('amount'))['total'] or 0
         
         total_expense = Transaction.objects.filter(
-            transaction_type__name='Списание'
+            transaction_type__is_income=False
         ).aggregate(total=Sum('amount'))['total'] or 0
         
         total_balance = total_income - total_expense

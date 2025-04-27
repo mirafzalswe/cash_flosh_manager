@@ -71,7 +71,7 @@
                             {% for type in transaction_types %}
                             <tr>
                                 <td>
-                                    <span class="badge {% if type.name == 'Пополнение' %}bg-success{% else %}bg-danger{% endif %}">
+                                    <span class="badge {% if type.is_income %}bg-success{% else %}bg-danger{% endif %}">
                                         {{ type.name }}
                                     </span>
                                 </td>
@@ -117,7 +117,7 @@
                             <tr>
                                 <td>{{ category.name }}</td>
                                 <td>
-                                    <span class="badge {% if category.transaction_type.name == 'Пополнение' %}bg-success{% else %}bg-danger{% endif %}">
+                                    <span class="badge {% if category.transaction_type.is_income %}bg-success{% else %}bg-danger{% endif %}">
                                         {{ category.transaction_type.name }}
                                     </span>
                                 </td>
@@ -165,7 +165,7 @@
                                 <td>{{ subcategory.name }}</td>
                                 <td>{{ subcategory.category.name }}</td>
                                 <td>
-                                    <span class="badge {% if subcategory.category.transaction_type.name == 'Пополнение' %}bg-success{% else %}bg-danger{% endif %}">
+                                    <span class="badge {% if subcategory.category.transaction_type.is_income %}bg-success{% else %}bg-danger{% endif %}">
                                         {{ subcategory.category.transaction_type.name }}
                                     </span>
                                 </td>

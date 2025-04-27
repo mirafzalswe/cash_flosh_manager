@@ -46,6 +46,26 @@
                             Тип транзакции определяет, является ли операция доходом или расходом.
                         </div>
                     </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" 
+                               class="form-check-input {% if form.is_income.errors %}is-invalid{% endif %}" 
+                               id="{{ form.is_income.id_for_label }}" 
+                               name="{{ form.is_income.html_name }}"
+                               {% if form.is_income.value %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ form.is_income.id_for_label }}">
+                            Тип пополнения
+                        </label>
+                        {% if form.is_income.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.is_income.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text text-muted">
+                            Отметьте, если этот тип транзакции является пополнением (доходом). Если не отмечено, считается списанием (расходом).
+                        </div>
+                    </div>
                     
                     <div class="d-flex justify-content-between">
                         <a href="{% url 'directory_list' %}" class="btn btn-outline-secondary">

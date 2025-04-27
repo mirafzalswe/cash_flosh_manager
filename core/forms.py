@@ -17,9 +17,10 @@ class TransactionTypeForm(forms.ModelForm):
     """Форма для создания и редактирования типов транзакций"""
     class Meta:
         model = TransactionType
-        fields = ['name']
+        fields = ['name', 'is_income']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'})
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'is_income': forms.CheckboxInput(attrs={'class': 'form-check-input'})
         }
 
 

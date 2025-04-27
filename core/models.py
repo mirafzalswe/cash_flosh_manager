@@ -19,6 +19,7 @@ class Status(models.Model):
 class TransactionType(models.Model):
     """Модель для типов транзакций (Пополнение, Списание и т.д.)"""
     name = models.CharField(max_length=100, unique=True, verbose_name="Название")
+    is_income = models.BooleanField(default=False, verbose_name="Тип пополнения")
     
     class Meta:
         verbose_name = "Тип транзакции"

@@ -84,7 +84,7 @@
                                         <span class="badge bg-secondary badge-status">{{ transaction.status }}</span>
                                     </td>
                                     <td>
-                                        {% if transaction.transaction_type.name == 'Пополнение' %}
+                                        {% if transaction.transaction_type.is_income %}
                                             <span class="badge bg-success">{{ transaction.transaction_type }}</span>
                                         {% else %}
                                             <span class="badge bg-danger">{{ transaction.transaction_type }}</span>
@@ -92,8 +92,8 @@
                                     </td>
                                     <td>{{ transaction.category }}</td>
                                     <td>{{ transaction.subcategory }}</td>
-                                    <td class="{% if transaction.transaction_type.name == 'Пополнение' %}text-success{% else %}text-danger{% endif %} fw-bold">
-                                        {% if transaction.transaction_type.name == 'Пополнение' %}+{% else %}-{% endif %}
+                                    <td class="{% if transaction.transaction_type.is_income %}text-success{% else %}text-danger{% endif %} fw-bold">
+                                        {% if transaction.transaction_type.is_income %}+{% else %}-{% endif %}
                                         {{ transaction.amount|floatformat:2 }} ₽
                                     </td>
                                     <td>
