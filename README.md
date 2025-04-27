@@ -1,4 +1,9 @@
-пш# Cash Flow Manager
+# Cash Flow Manager
+<img width="1552" alt="image" src="https://github.com/user-attachments/assets/210b1837-87f4-4c5a-a87f-c9e19ba2d7d1" />
+
+<img width="1552" alt="image" src="https://github.com/user-attachments/assets/0318a41e-25a7-452e-baf8-4fa63126744f" />
+
+<img width="1552" alt="image" src="https://github.com/user-attachments/assets/ba3911ff-8ffb-435d-927e-e986afae173a" />
 
 A comprehensive Django-based web application for managing personal and business finances. The application allows users to track income and expenses, categorize transactions, and generate financial reports.
 
